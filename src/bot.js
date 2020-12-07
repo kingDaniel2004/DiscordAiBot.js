@@ -19,6 +19,7 @@ function gotMsg(msg){
     if (msg.content === 'feddy is pro'){
         msg.reply('no you');
         //msg.channel.send('no you');
+
     }
 
 }
