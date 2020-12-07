@@ -16,9 +16,9 @@ client.on('message', gotMsg);
 
 function gotMsg(msg){
     console.log(msg.content);
-    if (msg.content === 'ping'){
-        //msg.reply('pong');
-        msg.channel.send('pong');
+    if (msg.content === 'feddy is pro'){
+        msg.reply('no you');
+        //msg.channel.send('no you');
     }
 
 }
