@@ -1,0 +1,23 @@
+{
+  "name": "discordaibot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kingDaniel2004/DiscordAiBot.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kingDaniel2004/DiscordAiBot.js/issues"
+  },
+  "homepage": "https://github.com/kingDaniel2004/DiscordAiBot.js#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0"
+  }
+}
