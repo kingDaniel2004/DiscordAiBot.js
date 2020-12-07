@@ -13,7 +13,6 @@ client.on('ready', readyDiscord => {console.log("Bot is online...");});
 
 client.on('message', gotMsg);
 
-
 function gotMsg(msg){
     console.log(msg.content);
     if (msg.content === 'feddy is pro'){
