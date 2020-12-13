@@ -17,8 +17,12 @@
   },
   "homepage": "https://github.com/kingDaniel2004/DiscordAiBot.js#readme",
   "dependencies": {
+    "@microduino/tf-coco-ssd": "^1.0.3-alpha",
+    "@tensorflow-models/coco-ssd": "^2.2.1",
     "@tensorflow-models/mobilenet": "^2.0.4",
     "@tensorflow/tfjs": "^2.7.0",
+    "@tensorflow/tfjs-backend-cpu": "^2.7.0",
+    "@tensorflow/tfjs-backend-webgl": "^2.7.0",
     "@tensorflow/tfjs-node": "^2.7.0",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
