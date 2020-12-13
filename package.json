@@ -17,7 +17,14 @@
   },
   "homepage": "https://github.com/kingDaniel2004/DiscordAiBot.js#readme",
   "dependencies": {
+    "@tensorflow-models/mobilenet": "^2.0.4",
+    "@tensorflow/tfjs": "^2.7.0",
+    "@tensorflow/tfjs-node": "^2.7.0",
     "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "get-image-data": "^5.0.0",
+    "jimp": "^0.16.1",
+    "ml5": "^0.6.0",
+    "open": "^7.3.0"
   }
 }
