@@ -22,6 +22,7 @@ function gotMsg(msg) {
     MSG = msg;
     if (!msg.content.startsWith(prefix)) return;
 
+    //msg.react(getemoji("person"));
     url = msg.content.substring(prefix.length);
     classfy(url);
 }
@@ -59,14 +60,19 @@ async function modelReady(predictions){
     console.log(predictions);
     var result = "Predictions: "
 
+    if (predictions.length == 0){
+       result += "\n Sorry. I don't know what is that. ";
+       MSG.react(getemoji("none"));
+    }
+
 
     for (var i = 0; i < predictions.length; i++){
        result += "\n(" + (i+1) + ")  [" + (predictions[i].score * 100).toFixed(2) + "%] " + (predictions[i].class);
+       MSG.react(getemoji(predictions[i].class));
     }
 
     console.log(result);
     MSG.reply(result)
-    MSG.react("👍")
 
 
     /*
@@ -87,3 +93,88 @@ async function modelReady(predictions){
 
 
 }
+
+function getemoji(emoji){
+    if(emoji === "person")          return "🧑"
+    if(emoji === "backpack")        return "🎒"
+    if(emoji === "bicycle")         return "🚲"
+    if(emoji === "car")             return "🚗"
+    if(emoji === "traffic light")   return "🚦"
+    if(emoji === "fire hydrant")    return "🧯"
+    if(emoji === "handbag")         return "👜"
+    if(emoji === "tie")             return "👔"
+    if(emoji === "suitcase")        return "🧳"
+    if(emoji === "bus")             return "🚌"
+    if(emoji === "truck")           return "🚚"
+    if(emoji === "boat")            return "🛥️"
+    if(emoji === "train")           return "🚆"
+    if(emoji === "motorcycle")     return "🏍"
+    if(emoji === "airplane")     return "✈"
+    if(emoji === "stop sign")     return "🛑"
+    if(emoji === "bench")     return "💺"
+    if(emoji === "parking meter")     return "🅿️"
+    if(emoji === "bird")     return "🐦"
+    if(emoji === "dog")     return "🐕"
+    if(emoji === "sheep")     return "🐑"
+    if(emoji === "elephant")     return "🐘"
+    if(emoji === "zebra")     return "🦓"
+    if(emoji === "giraffe")     return "🦒"
+    if(emoji === "bear")     return "🐻"
+    if(emoji === "cow")     return "🐮"
+    if(emoji === "horse")     return "🐴"
+    if(emoji === "cat")     return "🐈"
+    if(emoji === "frisbee")     return "🥏"
+    if(emoji === "snowboard")     return "🏂"
+    if(emoji === "kite")     return "🪁"
+    if(emoji === "baseball glove")     return "🧤"
+    if(emoji === "surfboard")     return "🏄"
+    if(emoji === "tennis racket")     return "🎾"
+    if(emoji === "baseball bat")     return "⚾"//*
+    if(emoji === "bowl")     return "🥣"
+    if(emoji === "knife")     return "🔪"
+    if(emoji === "cup")     return "🥤"
+    if(emoji === "bottle")     return "🍼"
+    if(emoji === "skis")     return "🎿"
+    if(emoji === "sports ball")     return "⚽"//*
+    if(emoji === "skateboard")     return "🛹"
+    if(emoji === "spoon")     return "🥄"
+    if(emoji === "fork")     return "🍴"//*
+    if(emoji === "wine glass")     return "🍷"
+    if(emoji === "banana")     return "🍌"
+    if(emoji === "sandwich")     return "🥪"
+    if(emoji === "broccoli")     return "🥦"
+    if(emoji === "hot dog")     return "🌭"
+    if(emoji === "donut")     return "🍩"
+    if(emoji === "cake")     return "🎂"
+    if(emoji === "pizza")     return "🍕"
+    if(emoji === "carrot")     return "🥕"
+    if(emoji === "orange")     return "🍊"
+    if(emoji === "apple")     return "🍎"
+    if(emoji === "chair")     return "🪑"
+    if(emoji === "potted plant")     return "🪴"
+    //if(emoji === "dining table")     return ""
+    if(emoji === "toilet")     return "🚽"
+    if(emoji === "bed")     return "🛏"
+    if(emoji === "couch")     return "🛋"
+    if(emoji === "tv")     return "📺"
+    if(emoji === "mouse")     return "🖱️"
+    if(emoji === "keyboard")     return "⌨️"
+    if(emoji === "cell phone")     return "📱"
+    if(emoji === "remote")     return "📱"//*
+    if(emoji === "laptop")     return "💻"
+    //if(emoji === "microwave")     return ""
+    if(emoji === "toaster")     return "🍞"//*
+    //if(emoji === "refrigerator")     return ""
+    //if(emoji === "oven")     return ""
+    //if(emoji === "sink")     return ""
+    if(emoji === "book")     return "📖"
+    if(emoji === "vase")     return "🏺"
+    if(emoji === "teddy bear")     return "🧸"
+    if(emoji === "toothbrush")     return "🪥"
+    //if(emoji === "hair drier")     return ""
+    if(emoji === "scissors")     return "✂️"
+    if(emoji === "clock")     return "🕔"
+
+    return "❓";
+}
+//sowing their own clothes, gorwing thier own food, pospoding their marrage, getting fewer babies, vacant lots
