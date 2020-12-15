@@ -15,14 +15,7 @@ client.on('ready', readyDiscord => {console.log("Bot is online...");});
 client.on('message', gotMsg);
 
 //image process
-const { createCanvas, loadImage } = require('canvas')
-const canvas = createCanvas(200, 200)
-const ctx = canvas.getContext('2d')
-const open = require('open');
-
 var gm = require('gm').subClass({imageMagick: true});
-
-
 
 //global vars
 const prefix = ".";
@@ -35,35 +28,8 @@ async function gotMsg(msg) {
 
     url = msg.content.substring(prefix.length);
     classfy(url);
-
-    var picGm = gm(url)
-
-    imagedraw(url);
-
-    
 }
 
-async function imagedraw(url){
-    var image; 
-
-    //picGm.drawRectangle();
-    gm(url)
-        //.flip()
-        //.magnify()
-        //.rotate('green', 45)
-        //.blur(7, 3)
-        .stroke("#FF0000", 3)
-        .fill("rgba( 255, 255, 255 , 0 )")
-        //.drawRectangle(313, 242, 121, 158)
-        //.crop(300, 300, 150, 130)
-        //.edge(3)
-        .write('image.jpg', function (err) {
-        if (!err) {
-            console.log('crazytown has arrived');
-            MSG.channel.send("Testing message.", { files: ["image.jpg"] });
-        }
-        })
-}
 
 async function classfy(url){
     image(url, async function (err, image) {
@@ -83,6 +49,7 @@ async function classfy(url){
             //load the model
             await load_coco(input)
         }catch(e){
+
             console.log(e);
         }
     });
@@ -95,7 +62,7 @@ async function load_coco(img){
 }
 
 async function modelReady(predictions){
-    console.log(predictions);
+    console.log("COCO-SSD model ready... ");
     var result = "Predictions: "
 
     if (predictions.length == 0){
@@ -103,34 +70,43 @@ async function modelReady(predictions){
        MSG.react(getemoji("none"));
     }
 
+    var image = gm(url)
+            .stroke("#FF0000", 3)
+            .fill("rgba( 255, 255, 255 , 0 )");
 
+    //outline(draw) all the founded objects
     for (var i = 0; i < predictions.length; i++){
-       result += "\n(" + (i+1) + ")  [" + (predictions[i].score * 100).toFixed(2) + "%] " + (predictions[i].class);
-       MSG.react(getemoji(predictions[i].class));
+        var x = predictions[i].bbox[0];
+        var y = predictions[i].bbox[1];
+        var w = predictions[i].bbox[2];
+        var h = predictions[i].bbox[3];
+        image.drawRectangle(x, y, x+w, y+h)
+
+        //result
+        result += "\n(" + (i+1) + ")  [" + (predictions[i].score * 100).toFixed(2) + "%] " + (predictions[i].class);
+
+        //react
+        MSG.react(getemoji(predictions[i].class));
     }
 
-    console.log(result);
-    MSG.reply(result)
-
-
-    /*
-
-    var result = "Predictions: ";
-    console.log("printing... ");
-    for (var i = 0; i < predictions.length; i++){
-       console.log("printing... ");
-       result += "\n (" + i + ")  [" + (predictions[i].probability * 100).toFixed(2) + "%] " + (predictions[i].className);
-    }
-
-    console.log(predictions);
-    MSG.reply(result)
-    console.log("output: " + result);
-
-    //console.log(predictions[0].className);
-    */
-
-
+    //finally save the image locally then attach it in discord.
+    image.write('image.jpg', function (err) {
+        if (!err) {
+            console.log("New image succefully created");
+            MSG.channel.send(result, { 
+                files: ["image.jpg"] 
+            });
+        }
+    })
 }
+
+
+
+
+
+
+
+
 
 function getemoji(emoji){
     if(emoji === "person")          return "🧑"
