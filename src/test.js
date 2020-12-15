@@ -1,3 +1,29 @@
+/*
+const { createCanvas, loadImage } = require('canvas')
+const canvas = createCanvas(200, 200)
+const ctx = canvas.getContext('2d')
+open = require('open');
+*/ 
+// Write "Awesome!"
+/*
+ctx.font = '30px Impact'
+ctx.rotate(0.1)
+ctx.fillText('what!', 50, 100)
+*/
+ 
+/*
+// Draw line under text
+var text = ctx.measureText('what!')
+ctx.strokeStyle = 'rgba(0,0,0,0.5)'
+ctx.beginPath()
+ctx.lineTo(50, 102)
+ctx.lineTo(50 + text.width, 102)
+ctx.stroke()
+*/
+
+//var myimg;
+
+
 require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
@@ -11,49 +37,21 @@ var image = require('get-image-data')
 const { createCanvas, loadImage } = require('canvas')
 
 
-/*
-
-
-
-
-// Write "Awesome!"
-
-// Draw line under text
-
-// Draw cat with lime helmet
-
-*/
-
 var fs = require('fs'),
     http = require('http'),
     url = require('url'),
     open = require('open');
 
-//const { mod } = require('@tensorflow/tfjs-node');
+const canvas = createCanvas(200, 200)
+const ctx = canvas.getContext('2d')
 
-
-    // for getting the data images
-
-//var image = require('get-image-data')
-
-//const ml5 = require('ml5');
-//var ml5 = require('ml5');
-
-//global
-//import * as tf from '@tensorflow/tfjs-node'
-//var tf = require('@tensorflow/tfjs-node');
-//var MN = require('@tensorflow-models/mobilenet');
-//tf.setBackend('cpu');
-//tf.ready();
 
 client.login(process.env.BOTTOKEN);
 client.on('ready', readyDiscord => {console.log("Bot is online...");});
 client.on('message', gotMsg);
 
 
-//>= == === >== ==> >< >< >< <> <=> <===> <==>
 
-const prefix = ".";
 var MSG, url;
 
 function gotMsg(msg) {
@@ -66,9 +64,9 @@ function gotMsg(msg) {
     if (checkURL(msg.content)){
         //msg.reply("A valid image"); 
         url = msg.content.substring(prefix.length);
-        //console.log('\n\n\n\n image loading...\n');
-        //classfy(url);
-        name();
+        console.log('\n\n\n\n image loading...\n');
+        classfy(url);
+        //name();
     } else {
         url = msg.content.substring(prefix.length);
         console.log('\n\n\n\n image loading...\n');
@@ -78,45 +76,25 @@ function gotMsg(msg) {
 
 }
 
+async function modelReady(result){
 
-
-
-async function name(){
-    url = 'https://i.imgur.com/wCsQLGC.png'
     var myimg = await loadImage(url) 
+    //ctx.drawImage(myimg, 0, 0, canvas.width, canvas.height);  
+    console.log(canvas.width);
+    console.log(canvas.height);
+
     ctx.drawImage(myimg, 0, 0, canvas.width, canvas.height);  
-    console.log("testin");
-    open(canvas.toDataURL(), {app: 'firefox'});
-}
 
-loadImage(url).then((image) => {
-ctx.drawImage(image, 50, 0, 70, 70)
-
-console.log('<img src="' + canvas.toDataURL() + '" />')
-})
-
-var ImageHeight, ImageWidth;
-const canvas = createCanvas(596, 451)
-//const canvas = loadImage(url).cr;
-const ctx = canvas.getContext('2d')
-
-function modelReady(result){
-    //name();
-
-
-    /*
-    var url = 'https://i.imgur.com/wCsQLGC.png'
-    var myimg = await loadImage(url) 
-    ctx.drawImage(myimg, 0, 0, canvas.width, canvas.height);  
 
     console.log("Model is ready");
     //ctx.drawImage(url, 10, 10);
     //console.log(result);
 
+    //open(canvas.toDataURL(), {app: 'firefox'});
     console.log(result[1].bbox[1]);
     for (let i = 0; i < result.length; i++){
         let obj = result[i].bbox;
-        ctx.stroke(0, 255, 0);
+        //ctx.stroke(0, 255, 0);
         //ctx.fill();
         ctx.rect(obj[0], obj[1], obj[2], obj[3]);
         console.log("class: " + obj.class);
@@ -127,9 +105,11 @@ function modelReady(result){
         console.log("\n");
     }
 
+
     open(canvas.toDataURL(), {app: 'firefox'});
-    */
 }
+
+
 
 
 async function classfy(url){
@@ -182,37 +162,50 @@ async function load_coco(img){
     modelReady(predictions);
 }
 
-function gotDetections(error, results){
-    console.log("Model ready");
-    console.log(results);
-}
-
-
-async function load_mobilenet(img){
-    // Load the model.
-    const model = await mobilenet.load();
-
-    // Classify the image.
-    const predictions = await model.classify(img);
-
-    var result = "Predictions: ";
-    console.log("printing... ");
-    for (var i = 0; i < predictions.length; i++){
-       console.log("printing... ");
-       result += "\n (" + i + ")  [" + (predictions[i].probability * 100).toFixed(2) + "%] " + (predictions[i].className);
-    }
-
-    console.log(predictions);
-    MSG.reply(result)
-    console.log("output: " + result);
-
-    //console.log(predictions[0].className);
-}
-
-  
-
 function checkURL(url) {
     return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
 }
 
 
+
+
+async function name(){
+    var url = 'https://i.imgur.com/wcsqlgc.png'
+    var myimg = await loadimage(url) 
+    ctx.drawimage(myimg, 0, 0, canvas.width, canvas.height);  
+    console.log("testin");
+    open(canvas.todataurl(), {app: 'firefox'});
+}
+
+
+
+//ctx.fillStyle = '#fff'
+//ctx.fillRect(0, 0, width, height)
+//open(url, {app: 'firefox'});
+
+/*
+myimg.then(() => {
+    //open(myimg, );
+
+    //open(canvas.toDataURL, {app: 'firefox'});
+    open(canvas.toBuffer, {app: 'firefox'});
+    //console.loadImage(myimg)
+    console.log("hello")
+    //open(url);
+
+}).catch(err => {
+  console.log('oh no!', err)
+})
+*/
+
+/*
+// Draw cat with lime helmet
+ loadImage(url).then((image) => {
+  //ctx.drawImage(image, 50, 0, 70, 70)
+   //open(canvas.toDataURL, {app: 'firefox'});
+   //open(canvas, {app: 'firefox'});
+   //open(url, {app: 'firefox'});
+ 
+  //console.log('<img src="' + canvas.toDataURL() + '" />')
+})
+*/
