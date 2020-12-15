@@ -14,17 +14,55 @@ client.login(process.env.BOTTOKEN);
 client.on('ready', readyDiscord => {console.log("Bot is online...");});
 client.on('message', gotMsg);
 
+//image process
+const { createCanvas, loadImage } = require('canvas')
+const canvas = createCanvas(200, 200)
+const ctx = canvas.getContext('2d')
+const open = require('open');
 
+var gm = require('gm').subClass({imageMagick: true});
+
+
+
+//global vars
 const prefix = ".";
 var MSG;
 
-function gotMsg(msg) {
+//code
+async function gotMsg(msg) {
     MSG = msg;
     if (!msg.content.startsWith(prefix)) return;
 
-    //msg.react(getemoji("person"));
     url = msg.content.substring(prefix.length);
     classfy(url);
+
+    var picGm = gm(url)
+
+    imagedraw(url);
+
+    
+}
+
+async function imagedraw(url){
+    var image; 
+
+    //picGm.drawRectangle();
+    gm(url)
+        //.flip()
+        //.magnify()
+        //.rotate('green', 45)
+        //.blur(7, 3)
+        .stroke("#FF0000", 3)
+        .fill("rgba( 255, 255, 255 , 0 )")
+        //.drawRectangle(313, 242, 121, 158)
+        //.crop(300, 300, 150, 130)
+        //.edge(3)
+        .write('image.jpg', function (err) {
+        if (!err) {
+            console.log('crazytown has arrived');
+            MSG.channel.send("Testing message.", { files: ["image.jpg"] });
+        }
+        })
 }
 
 async function classfy(url){
@@ -33,7 +71,7 @@ async function classfy(url){
             const numChannels = 3;
             const numPixels = image.width * image.height;
             const values = new Int32Array(numPixels * numChannels);
-            pixels = image.data
+           pixels = image.data
             for (let i = 0; i < numPixels; i++) {
                 for (let channel = 0; channel < numChannels; ++channel) {
                     values[i * numChannels + channel] = pixels[i * 4 + channel];
@@ -178,3 +216,6 @@ function getemoji(emoji){
     return "❓";
 }
 //sowing their own clothes, gorwing thier own food, pospoding their marrage, getting fewer babies, vacant lots
+
+
+
