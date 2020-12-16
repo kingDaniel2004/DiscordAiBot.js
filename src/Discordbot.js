@@ -16,28 +16,56 @@ client.on('message', gotMsg);
 
 //image process
 var gm = require('gm').subClass({imageMagick: true});
+var fs = require('fs');
 
 //global vars
-const prefix = ".";
+const PREFIX = "$";
 var userMessage;
 var userImage;
 var imageURL;
+var words;
 
 //code
 async function gotMsg(msg) {
-    if (!msg.content.startsWith(prefix)) return;
+    if (!msg.content.startsWith(PREFIX)) return;
+
     userMessage = msg;
-
-    imageURL = msg.content.substring(prefix.length);
-
+    words = userMessage.content.substring(PREFIX.length).match(/\S+/gi);
+    imageURL = words[0];
     userImage = gm(imageURL);
 
-    classfy(imageURL);
+    imageOutputChoice(words[1]);
+}
+
+async function imageOutputChoice(choice){
+    if (choice == "0") imageClassfy();
+    if (choice == "1") blur(words[2]);
+    if (choice == "2") resize(words[2], words[3]);
+}
+
+async function blur(level){
+    userImage.blur(level, level);
+    ImageSend("blur!!");
+}
+
+async function resize(width, height){
+
+    //var readStream = fs.createReadStream('/path/to/my/img.jpg');
+
+    get_image_data(imageURL, async function (err, image) {
+        width *= (image.width / 100) 
+        height *= (image.height / 100)
+
+        userImage.resize(width, height);
+        ImageSend("resize!! \n" + "");
+    });
+
 }
 
 
-async function classfy(url){
-    get_image_data(url, async function (err, image) {
+
+async function imageClassfy(){
+    get_image_data(imageURL, async function (err, image) {
         try{
             const numChannels = 3;
             const numPixels = image.width * image.height;
@@ -93,6 +121,10 @@ async function modelReady(predictions){
     }
 
     //finally save the image locally then attach it in discord.
+    ImageSend(result);
+}
+
+function ImageSend(result){
     const fileName = 'image.jpg'
     userImage.write(fileName, function (err) {
         if (!err) {
@@ -102,6 +134,7 @@ async function modelReady(predictions){
             });
         }
     })
+
 }
 
 
