@@ -17,6 +17,7 @@ client.on('message', gotMsg);
 //image process
 var gm = require('gm').subClass({imageMagick: true});
 var fs = require('fs');
+const { image } = require('@tensorflow/tfjs-node');
 
 //global vars
 const PREFIX = "$";
@@ -41,6 +42,12 @@ async function imageOutputChoice(choice){
     if (choice == "0") imageClassfy();
     if (choice == "1") blur(words[2]);
     if (choice == "2") resize(words[2], words[3]);
+    if (choice == "3") colorize(words[2], words[3], words[4]);
+    if (choice == "4") contrast(words[2]);
+    if (choice == "5") flip(words[2]);
+    if (choice == "6") quality(words[2]);
+    if (choice == "7") rotate(words[2]);
+    else getImageInfo();
 }
 
 async function blur(level){
@@ -49,18 +56,98 @@ async function blur(level){
 }
 
 async function resize(width, height){
-
-    //var readStream = fs.createReadStream('/path/to/my/img.jpg');
-
     get_image_data(imageURL, async function (err, image) {
         width *= (image.width / 100) 
         height *= (image.height / 100)
 
         userImage.resize(width, height);
-        ImageSend("resize!! \n" + "");
+        ImageSend("resize!! \n");
     });
-
 }
+
+function colorize(red, green, blue){
+    userImage.colorize(red, green, blue);
+    ImageSend("Colorize");
+}
+
+function contrast(multiplier){
+    userImage.contrast(Math.floor(multiplier));
+    ImageSend("Contrast");
+}
+
+function flip(side){
+    console.log(side);
+    if (side == "y"){
+        userImage.flip()
+    } else if (side == "x"){
+        userImage.flop()
+    } else if (side == "xy") {
+        userImage.flip()
+        userImage.flop()
+    } else {
+        userMessage.reply("Oops... invalid flip side.")
+        return;
+    }
+
+    ImageSend("flipped");
+}
+
+function quality(level){
+    userImage.quality(level)
+    ImageSend("quality");
+}
+
+function rotate(deg){
+    userImage.rotate("rgba(111,222,333,0)", deg);
+    ImageSend("rotated");
+}
+
+
+function getImageInfo(){
+    userImage.identify(function(err, value) {
+        var info = "```";
+        info += "\n format: " + value.format;
+        info += "\n Geomentry: " + value.size.width +"w "+value.size.height + "h";
+        info += "\n Quality: " + value.Quality 
+        info += "\n Size: " + value.Filesize
+        info += "\n Type: " + value.Type 
+        info += "\n Depth: " + value.Depth 
+        info += "```"
+        if (!err) userMessage.reply(info);
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -125,7 +212,7 @@ async function modelReady(predictions){
 }
 
 function ImageSend(result){
-    const fileName = 'image.jpg'
+    const fileName = 'image.png'
     userImage.write(fileName, function (err) {
         if (!err) {
             console.log("New image succefully created");
