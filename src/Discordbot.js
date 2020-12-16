@@ -27,7 +27,7 @@ var imageURL;
 var words;
 
 //code
-async function gotMsg(msg) {
+function gotMsg(msg) {
     if (!msg.content.startsWith(PREFIX)) return;
 
     userMessage = msg;
@@ -38,19 +38,20 @@ async function gotMsg(msg) {
     imageOutputChoice(words[1]);
 }
 
-async function imageOutputChoice(choice){
-    if (choice == "0") imageClassfy();
-    if (choice == "1") blur(words[2]);
-    if (choice == "2") resize(words[2], words[3]);
-    if (choice == "3") colorize(words[2], words[3], words[4]);
-    if (choice == "4") contrast(words[2]);
-    if (choice == "5") flip(words[2]);
-    if (choice == "6") quality(words[2]);
-    if (choice == "7") rotate(words[2]);
+function imageOutputChoice(choice){
+    if      (choice == "0") imageClassfy();
+    else if (choice == "1") blur(words[2]);
+    else if (choice == "2") resize(words[2], words[3]);
+    else if (choice == "3") colorize(words[2], words[3], words[4]);
+    else if (choice == "4") contrast(words[2]);
+    else if (choice == "5") flip(words[2]);
+    else if (choice == "6") quality(words[2]);
+    else if (choice == "7") rotate(words[2]);
+    else if (choice == "8") blackNwhite(words[2]);
     else getImageInfo();
 }
 
-async function blur(level){
+function blur(level){
     userImage.blur(level, level);
     ImageSend("blur!!");
 }
@@ -100,6 +101,11 @@ function quality(level){
 function rotate(deg){
     userImage.rotate("rgba(111,222,333,0)", deg);
     ImageSend("rotated");
+}
+
+function blackNwhite(){
+    userImage.monochrome();
+    ImageSend("Black and White");
 }
 
 
@@ -213,6 +219,7 @@ async function modelReady(predictions){
 
 function ImageSend(result){
     const fileName = 'image.png'
+    userImage.setFormat('png')
     userImage.write(fileName, function (err) {
         if (!err) {
             console.log("New image succefully created");
@@ -315,7 +322,4 @@ function getemoji(emoji){// /* means that emoji is not really the accurate image
 
     return "❓";
 }
-//sowing their own clothes, gorwing thier own food, pospoding their marrage, getting fewer babies, vacant lots
-
-
 
