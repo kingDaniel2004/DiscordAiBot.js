@@ -11,8 +11,11 @@ var get_image_data = require('get-image-data')
 
 //activate the bot
 client.login(process.env.BOTTOKEN);
-client.on('ready', readyDiscord => {console.log("Bot is online...");});
 client.on('message', gotMsg);
+client.on('ready', readyDiscord => {
+    console.log("Bot is online..."); 
+    setPresense()
+});
 
 //image process
 var gm = require('gm').subClass({imageMagick: true});
@@ -35,7 +38,67 @@ function gotMsg(msg) {
     imageURL = words[0];
     userImage = gm(imageURL);
 
-    imageOutputChoice(words[1]);
+    if (words[0] == "help"){
+        getHelp();
+    } else {
+        imageOutputChoice(words[1]);
+    }
+
+}
+
+function setPresense(){
+    client.user.setPresence({
+        activity:{
+            name: "[Type : " + PREFIX + " help ]"
+        }
+    })
+}
+
+function getHelp(){
+    console.log("HELP");
+
+    var help = "";
+
+    help += " Hello there! ";
+    help += "```";
+    help += "\n I can help you with 10 different tasks! ";
+    help += "```";
+    help += "```";
+    help += "\n [features #] Name.. ";
+    help += "\n [0] Image Classifying ";
+    help += "\n [1] Image bluring  ";
+    help += "\n [2] Image resizing ";
+    help += "\n [3] Image colorizing ";
+    help += "\n [4] Image contrasting ";
+    help += "\n [5] Image flipping ";
+    help += "\n [6] Image quality ";
+    help += "\n [7] Image rotation ";
+    help += "\n [8] Image to Black & White ";
+    help += "\n [9] Image Info ";
+    help += "```";
+    help += "```html";
+    help += "\n Commands you can use: ";
+    help += "\n Classfy:     <Prefix> <ImageURL> <num: Feature#>";
+    help += "\n Blur:        <Prefix> <ImageURL> <num: Feature#> <num: Level>";
+    help += "\n resize:      <Prefix> <ImageURL> <num: Feature#> <num: width %> <num: height %>";
+    help += "\n colorize:    <Prefix> <ImageURL> <num: Feature#> <num: red> <num: green> <num: blue>";
+    help += "\n contrast:    <Prefix> <ImageURL> <num: Feature#> <num: +/- level> ";
+    help += "\n flip:        <Prefix> <ImageURL> <num: Feature#> <char: side x/y/xy> ";
+    help += "\n quality:     <Prefix> <ImageURL> <num: Feature#> <num: level 0-100> ";
+    help += "\n rotate:      <Prefix> <ImageURL> <num: Feature#> <num: degree> ";
+    help += "\n Black/white: <Prefix> <ImageURL> <num: Feature#> ";
+    help += "\n Info:        <Prefix> <ImageURL> ";
+    help += "\n Help:        <Prefix> help ";
+    help += "```";
+    help += "```";
+    help += "example:";
+    help += "\n Classfy:                       " + PREFIX + " https://i.insider.com/536aa78069bedddb13c60c3a?width=600&format=jpeg&auto=webp 0";
+    help += "\n Flip the image x and y axis:   " + PREFIX + " https://i.insider.com/536aa78069bedddb13c60c3a?width=600&format=jpeg&auto=webp 5 xy";
+    help += "\n Colorize the image with red:   " + PREFIX + " https://i.insider.com/536aa78069bedddb13c60c3a?width=600&format=jpeg&auto=webp 3 255 0 0";
+    help += "```";
+    help += "\n \n";
+
+    userMessage.reply(help);
 }
 
 function imageOutputChoice(choice){
@@ -53,7 +116,7 @@ function imageOutputChoice(choice){
 
 function blur(level){
     userImage.blur(level, level);
-    ImageSend("blur!!");
+    ImageSend("blur " + " (Level: " + level + " )");
 }
 
 async function resize(width, height){
@@ -213,17 +276,17 @@ async function modelReady(predictions){
         userMessage.react(getemoji(predictions[i].class));
     }
 
-    //finally save the image locally then attach it in discord.
     ImageSend(result);
 }
 
+//send the file to discord.
 function ImageSend(result){
     const fileName = 'image.png'
     userImage.setFormat('png')
     userImage.write(fileName, function (err) {
         if (!err) {
             console.log("New image succefully created");
-            userMessage.channel.send(result, { 
+            userMessage.channel.send("```" + result + "```", { 
                 files: [fileName] 
             });
         }
@@ -234,12 +297,7 @@ function ImageSend(result){
 
 
 
-
-
-
-
-
-function getemoji(emoji){// /* means that emoji is not really the accurate image. 
+function getemoji(emoji){// /* means that the emoji is not really that accurate.
     if(emoji === "person")          return "🧑"
     if(emoji === "backpack")        return "🎒"
     if(emoji === "bicycle")         return "🚲"
